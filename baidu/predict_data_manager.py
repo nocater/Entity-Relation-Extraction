@@ -47,15 +47,15 @@ for file_set_type, df_data in zip(file_set_type_list, [df_train, df_valid, df_te
     text_tokened = '\n'.join([' '.join(row) for row in text_tokened])
     text_tokened_not_UNK = df_data.item.apply(bert_tokenizer.tokenize_not_UNK)
     text_tokened_not_UNK = '\n'.join([' '.join(row) for row in text_tokened_not_UNK])
-    # label
-    predicate_list = '\n'.join(df_data.labels)
+    # label only choose first 3 lables: 高中 学科 一级知识点
+    predicate_list = df_data.labels.apply(lambda x: x.split()[:3])
+    predicate_list_str = '\n'.join([' '.join(row) for row in predicate_list])
 
     print(f'datasize: {len(df_data)}')
-
     text_f.write(text)
     token_in_f.write(text_tokened)
     token_in_not_UNK_f.write(text_tokened_not_UNK)
-    predicate_out_f.write(predicate_list)
+    predicate_out_f.write(predicate_list_str)
 
     text_f.close()
     token_in_f.close()
