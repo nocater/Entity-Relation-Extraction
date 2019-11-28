@@ -6,7 +6,7 @@ from bert import tokenization
 # import tokenization
 
 dataset = 'baidu_95'
-DATA_OUTPUT_DIR = './data/'
+DATA_OUTPUT_DIR = './data/4_labels'
 vocab_file = '../pretrained_model/chinese_L-12_H-768_A-12/vocab.txt'
 
 # Load data
