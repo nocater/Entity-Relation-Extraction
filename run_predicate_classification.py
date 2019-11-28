@@ -257,6 +257,46 @@ class SKE_2019_Multi_Label_Classification_Processor(DataProcessor):
         return examples
 
 
+class Baidu_95_Multi_Label_Classification_Processor(DataProcessor):
+    """Processor for the Baidu_95 data set"""
+    def __init__(self):
+        self.language = "zh"
+
+    def get_examples(self, data_dir):
+        with open(os.path.join(data_dir, "token_in.txt"), encoding='utf-8') as token_in_f:
+            with open(os.path.join(data_dir, "predicate_out.txt"), encoding='utf-8') as predicate_out_f:
+                token_in_list = [seq.replace("\n", '') for seq in token_in_f.readlines()]
+                predicate_label_list = [seq.replace("\n", '') for seq in predicate_out_f.readlines()]
+                assert len(token_in_list) == len(predicate_label_list)
+                examples = list(zip(token_in_list, predicate_label_list))
+                return examples
+
+    def get_train_examples(self, data_dir):
+        return self._create_example(self.get_examples(os.path.join(data_dir, "train")), "train")
+
+    def get_dev_examples(self, data_dir):
+        return self._create_example(self.get_examples(os.path.join(data_dir, "valid")), "valid")
+
+    def get_test_examples(self, data_dir):
+        return self._create_example(self.get_examples(os.path.join(data_dir, "test")), "test")
+
+    def get_labels(self):
+        return ['生物技术实践', '公民道德与伦理常识', '经济学常识', '生活中的法律常识', '现代生物技术专题', '科学社会主义常识',
+                '地球与地图', '生物', '近代史', '政治', '遗传与进化', '生物科学与社会', '分子与细胞', '人口与城市', '历史',
+                '高中', '地理', '宇宙中的地球', '生产活动与地域联系', '古代史', '现代史', '稳态与环境']
+
+    def _create_example(self, lines, set_type):
+        """Creates examples for the training and dev sets."""
+        examples = []
+        for (i, line) in enumerate(lines):
+            guid = "%s-%s" % (set_type, i)
+            text_str = line[0]
+            predicate_label_str = line[1]
+            examples.append(
+                InputExample(guid=guid, text_a=text_str, text_b=None, label=predicate_label_str))
+        return examples
+
+
 def convert_single_example(ex_index, example, label_list, max_seq_length,
                            tokenizer):
     """Converts a single `InputExample` into a single `InputFeatures`."""
@@ -607,6 +647,7 @@ def main(_):
 
     processors = {
         "ske_2019": SKE_2019_Multi_Label_Classification_Processor,
+        "baidu_95": Baidu_95_Multi_Label_Classification_Processor,
     }
 
     tokenization.validate_case_matches_checkpoint(FLAGS.do_lower_case,
