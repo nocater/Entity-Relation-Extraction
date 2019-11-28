@@ -48,6 +48,8 @@ for file_set_type, df_data in zip(file_set_type_list, [df_train, df_valid, df_te
     text_tokened_not_UNK = df_data.item.apply(bert_tokenizer.tokenize_not_UNK)
     text_tokened_not_UNK = '\n'.join([' '.join(row) for row in text_tokened_not_UNK])
     # label only choose first 3 lables: 高中 学科 一级知识点
+    # if you want all labels
+    # just remove list slice
     predicate_list = df_data.labels.apply(lambda x: x.split()[:3])
     predicate_list_str = '\n'.join([' '.join(row) for row in predicate_list])
 
