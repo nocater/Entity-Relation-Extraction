@@ -6,7 +6,7 @@ from bert import tokenization
 # import tokenization
 
 dataset = 'baidu_95'
-DATA_OUTPUT_DIR = './data/4_labels'
+DATA_OUTPUT_DIR = './data/all_labels'
 vocab_file = '../pretrained_model/chinese_L-12_H-768_A-12/vocab.txt'
 
 # Load data
@@ -50,7 +50,7 @@ for file_set_type, df_data in zip(file_set_type_list, [df_train, df_valid, df_te
     # label only choose first 3 lables: 高中 学科 一级知识点
     # if you want all labels
     # just remove list slice
-    predicate_list = df_data.labels.apply(lambda x: x.split()[:3])
+    predicate_list = df_data.labels.apply(lambda x: x.split())
     predicate_list_str = '\n'.join([' '.join(row) for row in predicate_list])
 
     print(f'datasize: {len(df_data)}')
